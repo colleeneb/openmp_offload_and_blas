@@ -1,4 +1,4 @@
-# Examples
+# OpenMP Offload/Blas Examples
 Example C code showing how to offload blas calls from OpenMP regions,
 using cuBLAS and NVBLAS.
 Makefile is hardcoded to run on Summit.
