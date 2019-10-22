@@ -1,6 +1,23 @@
 # OpenMP Offload/Blas Examples
 Example C code showing how to offload blas calls from OpenMP regions,
 using cuBLAS and NVBLAS.
+
+Two executables, `sgemm_nvblas` and `sgemm_cublas` should be produced.
+`sgemm_nvblas` uses NVBLAS, and `sgemm_cublas` explicitly uses cuBLAS
+
+A snippet of the code, showing the interface is:
+```
+#pragma omp target data map(to:aa[0:SIZE*SIZE],bb[0:SIZE*SIZE],alpha,beta) map(tofrom:cc_gpu[0:SIZE*SIZE]) use_device_ptr(aa,bb,cc_gpu)
+ {
+#if defined(CUBLAS)
+   cublasSgemm(handle,CUBLAS_OP_N, CUBLAS_OP_N,SIZE, SIZE, SIZE, &alpha, aa, SIZE, bb, SIZE, &beta, cc_gpu, SIZE);
+#endif
+#if defined(NVBLAS)
+   sgemm("N","N",&size, &size, &size, &alpha, aa, &size, bb, &size, &beta, cc_gpu, &size);
+#endif
+  }
+```
+
 Makefile is hardcoded to run on Summit.
 
 # Building and Running on Summit
