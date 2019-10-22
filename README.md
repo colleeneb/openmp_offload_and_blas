@@ -18,10 +18,12 @@ Makefile is hardcoded to run on Summit.
     This loads the cuda module, which is needed for tests
     with nvprof
 
- 3. Compile the files
+ 3. Compile the files (one using cuBLAS and NVBLAS)
     ```
     $ make Makefile
     ```
+    Two executables, `sgemm_nvblas` and `sgemm_cublas` should be produced.
+    `sgemm_nvblas` uses NVBLAS, and `sgemm_cublas` explicitly uses cuBLAS
  4. Use jsun to run each simple example:
     ```
     $ jsrun -n 1 -a 1 -c 1 -g 1 ./sgemm_nvblas
