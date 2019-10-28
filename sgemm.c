@@ -70,10 +70,17 @@ int main( int argc, char* argv[] )
 
 const int size = SIZE;
 
-#pragma omp target data map(to:aa[0:SIZE*SIZE],bb[0:SIZE*SIZE],alpha,beta) map(tofrom:cc_gpu[0:SIZE*SIZE]) use_device_ptr(aa,bb,cc_gpu)
+#pragma omp target enter data map(to:aa[0:SIZE*SIZE],bb[0:SIZE*SIZE],cc_gpu[0:SIZE*SIZE])
+
+#pragma omp target data use_device_ptr(aa,bb,cc_gpu)
  {
 #if defined(CUBLAS)
-   cublasSgemm(handle,CUBLAS_OP_N, CUBLAS_OP_N,SIZE, SIZE, SIZE, &alpha, aa, SIZE, bb, SIZE, &beta, cc_gpu, SIZE);
+   int cublas_error = cublasSgemm(handle,CUBLAS_OP_N, CUBLAS_OP_N,size, size, size, &alpha, aa, size, bb, size, &beta, cc_gpu, size);
+   if( cublas_error != CUBLAS_STATUS_SUCCESS )
+     {
+       printf( "failed %d %f.\n", cublas_error, cc_gpu[0] );
+       exit(1);
+     }
 #endif
 #if defined(NVBLAS)
    sgemm("N","N",&size, &size, &size, &alpha, aa, &size, bb, &size, &beta, cc_gpu, &size);
@@ -86,12 +93,14 @@ const int size = SIZE;
  cublasDestroy(handle);
 #endif
 
+ #pragma omp target exit data map(from:cc_gpu[0:SIZE*SIZE])
+
   // error checking
   for(int i=0;i<SIZE*SIZE;i++)
     {
       if( fabs(cc_gpu[i] - cc_host[i]) > 0.0000001 )
         {
-          //printf( "%f %f\n", cc_gpu[i], cc_host[i] );
+	  if(i == 0) printf( "%f %f\n", cc_gpu[i], cc_host[i] );
 	  error++;
         }
 

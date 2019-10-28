@@ -37,7 +37,7 @@ Makefile is hardcoded to run on Summit.
 
  3. Compile the files (one using cuBLAS and NVBLAS)
     ```
-    $ make Makefile
+    $ make 
     ```
     Two executables, `sgemm_nvblas` and `sgemm_cublas` should be produced.
     `sgemm_nvblas` uses NVBLAS, and `sgemm_cublas` explicitly uses cuBLAS
