@@ -89,7 +89,7 @@ const int size = SIZE;
 
 #if defined(CUBLAS)
  // wait for call to finish
- cudaDeviceSynchronize();
+ cudaDeviceSynchronize(); // Avoid putting synchronization if not needed.
  cublasDestroy(handle);
 #endif
 
