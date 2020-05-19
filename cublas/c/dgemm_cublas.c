@@ -11,17 +11,17 @@ int dnum = 0;
 
 int main( int argc, char* argv[] )
 {
-  float *aa;
-  float *bb;
-  float *cc_gpu;
-  float *cc_host;
+  double *aa;
+  double *bb;
+  double *cc_gpu;
+  double *cc_host;
 
   int teams = 0;
   int threads = 0;
   int error = 0;
 
-  float alpha = 1.0;
-  float beta = 1.0;
+  double alpha = 1.0;
+  double beta = 1.0;
   cublasHandle_t handle;
   if (cublasCreate(&handle) != CUBLAS_STATUS_SUCCESS)
     {
@@ -29,16 +29,16 @@ int main( int argc, char* argv[] )
       exit(EXIT_FAILURE);
     }
 
-  if( (cc_gpu = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (cc_gpu = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
-  if( (cc_host = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (cc_host = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
-  if( (aa = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (aa = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
-  if( (bb = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (bb = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
 
@@ -63,11 +63,13 @@ int main( int argc, char* argv[] )
 
 const int size = SIZE;
 
+ printf( "%d\n", CUBLAS_OP_N);
+
 #pragma omp target enter data map(to:aa[0:SIZE*SIZE],bb[0:SIZE*SIZE],cc_gpu[0:SIZE*SIZE])
 
 #pragma omp target data use_device_ptr(aa,bb,cc_gpu)
  {
-   int cublas_error = cublasSgemm(handle,CUBLAS_OP_N, CUBLAS_OP_N,size, size, size, &alpha, aa, size, bb, size, &beta, cc_gpu, size);
+   int cublas_error = cublasDgemm(handle,CUBLAS_OP_N, CUBLAS_OP_N,size, size, size, &alpha, aa, size, bb, size, &beta, cc_gpu, size);
    if( cublas_error != CUBLAS_STATUS_SUCCESS )
      {
        printf( "failed %d %f.\n", cublas_error, cc_gpu[0] );
