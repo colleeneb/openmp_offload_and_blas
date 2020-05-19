@@ -1,7 +1,8 @@
-EXES=sgemm_cublas sgemm_nvblas
+EXES=sgemm_cublas sgemm_nvblas sgemm_cublas_fortran
 
 CUDAC=nvcc
 CC=xlc_r
+FC=xlf90_r
 CXXFLAGS=-O3 -qsmp -qoffload -g
 CFLAGS=$(CXXFLAGS)
 CUDAFLAGS=
@@ -10,10 +11,12 @@ LDFLAGS=
 
 all: $(EXES)
 
-sgemm_cublas: sgemm.c
-	$(CC) -o $@ -DCUBLAS $(CFLAGS) $^ $(LDFLAGS) -lcublas
-sgemm_nvblas: sgemm.c
-	$(CC) -o $@ -DNVBLAS -I/sw/summit/essl/6.1.0-2/essl/6.1/include/ $(CFLAGS) $^ $(LDFLAGS) -L${OLCF_CUDA_ROOT}/lib64  -lnvblas -L${OLCF_ESSL_ROOT}/lib64  -lessl
+sgemm_cublas: sgemm_cublas.c
+	$(CC) -o $@  $(CFLAGS) $^ $(LDFLAGS) -lcublas
+sgemm_cublas_fortran: cublas.f90 sgemm.f90 
+	$(FC) -o $@  $(CFLAGS) $^ $(LDFLAGS) -lcublas
+sgemm_nvblas: sgemm_nvblas.c
+	$(CC) -o $@  -I/sw/summit/essl/6.1.0-2/essl/6.1/include/ $(CFLAGS) $^ $(LDFLAGS) -L${OLCF_CUDA_ROOT}/lib64  -lnvblas -L${OLCF_ESSL_ROOT}/lib64  -lessl
 
 
 .SUFFIXES:

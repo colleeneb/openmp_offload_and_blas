@@ -3,13 +3,8 @@
 #include <assert.h>
 #include <math.h>
 #include <omp.h>
-#if defined(NVBLAS)
-#include "nvblas.h"
-#endif
-#if defined(CUBLAS)
 #include <cublas_v2.h>
 #include <cuda_runtime_api.h>
-#endif
 #define SIZE 1024
 
 int dnum = 0;
@@ -27,14 +22,12 @@ int main( int argc, char* argv[] )
 
   float alpha = 1.0;
   float beta = 1.0;
-#if defined(CUBLAS)
   cublasHandle_t handle;
   if (cublasCreate(&handle) != CUBLAS_STATUS_SUCCESS)
     {
       fprintf(stdout, "CUBLAS initialization failed!\n");
       exit(EXIT_FAILURE);
     }
-#endif
 
   if( (cc_gpu = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
@@ -74,24 +67,17 @@ const int size = SIZE;
 
 #pragma omp target data use_device_ptr(aa,bb,cc_gpu)
  {
-#if defined(CUBLAS)
    int cublas_error = cublasSgemm(handle,CUBLAS_OP_N, CUBLAS_OP_N,size, size, size, &alpha, aa, size, bb, size, &beta, cc_gpu, size);
    if( cublas_error != CUBLAS_STATUS_SUCCESS )
      {
        printf( "failed %d %f.\n", cublas_error, cc_gpu[0] );
        exit(1);
      }
-#endif
-#if defined(NVBLAS)
-   sgemm("N","N",&size, &size, &size, &alpha, aa, &size, bb, &size, &beta, cc_gpu, &size);
-#endif
   }
 
-#if defined(CUBLAS)
  // wait for call to finish
  cudaDeviceSynchronize(); // Avoid putting synchronization if not needed.
  cublasDestroy(handle);
-#endif
 
  #pragma omp target exit data map(from:cc_gpu[0:SIZE*SIZE])
 
