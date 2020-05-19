@@ -10,7 +10,7 @@ FFLAGS=$(CXXFLAGS)
 
 all: $(EXES)
 
-dgemm_cublas_fortran: cublas.f90 dgemm_cublas_fortran.f90 
+dgemm_cublas_fortran: dgemm_cublas_fortran.f90 
 	-$(FC) -o $@  $(CFLAGS) $^ 
 
 .PHONY: clean
