@@ -2,18 +2,21 @@
 Example C and Fortran code showing how to offload blas calls from OpenMP regions,
 using cuBLAS and NVBLAS.
 
-There are two directories: 
+There are three directories: 
  - cublas
  - nvblas
+ - mkl
 
 These contain Makefiles and examples of calling DGEMM from an OpenMP
-offload region with cuBLAS and NVBLAS. Note: The NVBLAS Makefile is hard-coded for Summit.
+offload region with cuBLAS, NVBLAS, and MKL. Note: The NVBLAS Makefile is hard-coded for Summit.
 
-To run them, cd into eitheer cublas or nvblas, then cd into a "c" or "fortran" subdirectory,
+To run them, cd into cublas, nvblas, or mkl, then cd into a "c" or "fortran" subdirectory,
 and compile with make.
 
-`dgemm_nvblas` uses NVBLAS, and `dgemm_cublas` explicitly uses cuBLAS
+`dgemm_nvblas` uses NVBLAS
+`dgemm_cublas` explicitly uses cuBLAS
 `dgemm_cublas_fortran` calls cuBLAS from Fortran using iso_c bindings.
+`dgemm_mkl` uses MKL with the Intel extension `target variant dispatch`
 
 A snippet of the code, showing the interface is:
 
@@ -33,9 +36,14 @@ For nvblas:
   }
 ```
 
-Makefile is hardcoded to run on Summit.
+For mkl:
+```
+#pragma omp target variant dispatch use_device_ptr(aa, bb, cc_gpu) 
+      cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans,SIZE,SIZE,SIZE, alpha, aa,
+		   SIZE, bb, SIZE, beta, cc_gpu, SIZE);
+```
 
-# Building and Running on Summit
+# Building CuBLAS and NVBLAS examples on Summit
 
  To run, the simplest is to submit an interactive job:
 
