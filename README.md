@@ -7,7 +7,7 @@ There are two directories:
  - nvblas
 
 These contain Makefiles and examples of calling DGEMM from an OpenMP
-offload region with cuBLAS and NVBLAS.
+offload region with cuBLAS and NVBLAS. Note: The NVBLAS Makefile is hard-coded for Summit.
 
 To run them, cd into eitheer cublas or nvblas, then cd into a "c" or "fortran" subdirectory,
 and compile with make.
