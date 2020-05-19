@@ -10,28 +10,28 @@ int dnum = 0;
 
 int main( int argc, char* argv[] )
 {
-  float *aa;
-  float *bb;
-  float *cc_gpu;
-  float *cc_host;
+  double *aa;
+  double *bb;
+  double *cc_gpu;
+  double *cc_host;
 
   int teams = 0;
   int threads = 0;
   int error = 0;
 
-  float alpha = 1.0;
-  float beta = 1.0;
+  double alpha = 1.0;
+  double beta = 1.0;
 
-  if( (cc_gpu = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (cc_gpu = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
-  if( (cc_host = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (cc_host = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
-  if( (aa = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (aa = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
-  if( (bb = (float *)malloc( sizeof(float)*SIZE*SIZE)) == NULL ) {
+  if( (bb = (double *)malloc( sizeof(double)*SIZE*SIZE)) == NULL ) {
     printf("problem\n");
   }
 
@@ -60,7 +60,7 @@ const int size = SIZE;
 
 #pragma omp target data use_device_ptr(aa,bb,cc_gpu)
  {
-   sgemm("N","N",&size, &size, &size, &alpha, aa, &size, bb, &size, &beta, cc_gpu, &size);
+   dgemm("N","N",&size, &size, &size, &alpha, aa, &size, bb, &size, &beta, cc_gpu, &size);
   }
 
  #pragma omp target exit data map(from:cc_gpu[0:SIZE*SIZE])
