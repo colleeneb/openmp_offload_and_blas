@@ -44,8 +44,6 @@ program main
      enddo
   enddo
 
-  print *, CUBLAS_OP_N
-
 ! get value from gpu
 
 !$omp target enter data map(to:aa,bb,cc_gpu)

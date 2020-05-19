@@ -63,8 +63,6 @@ int main( int argc, char* argv[] )
 
 const int size = SIZE;
 
- printf( "%d\n", CUBLAS_OP_N);
-
 #pragma omp target enter data map(to:aa[0:SIZE*SIZE],bb[0:SIZE*SIZE],cc_gpu[0:SIZE*SIZE])
 
 #pragma omp target data use_device_ptr(aa,bb,cc_gpu)
