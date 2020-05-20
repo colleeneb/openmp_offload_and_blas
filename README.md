@@ -1,6 +1,6 @@
 # OpenMP Offload/Blas Examples
 Example C and Fortran code showing how to offload blas calls from OpenMP regions,
-using cuBLAS and NVBLAS.
+using cuBLAS, NVBLAS, and MKL.
 
 There are three directories: 
  - cublas
