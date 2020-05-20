@@ -1,6 +1,6 @@
 # OpenMP Offload/Blas Examples
 Example C and Fortran code showing how to offload blas calls from OpenMP regions,
-using cuBLAS and NVBLAS.
+using cuBLAS, NVBLAS, and MKL.
 
 There are three directories: 
  - cublas
@@ -13,10 +13,10 @@ offload region with cuBLAS, NVBLAS, and MKL. Note: The NVBLAS Makefile is hard-c
 To run them, cd into cublas, nvblas, or mkl, then cd into a "c" or "fortran" subdirectory,
 and compile with make.
 
-`dgemm_nvblas` uses NVBLAS
-`dgemm_cublas` explicitly uses cuBLAS
-`dgemm_cublas_fortran` calls cuBLAS from Fortran using iso_c bindings.
-`dgemm_mkl` uses MKL with the Intel extension `target variant dispatch`
+ - `dgemm_nvblas` uses NVBLAS
+ - `dgemm_cublas` explicitly uses cuBLAS
+ - `dgemm_cublas_fortran` calls cuBLAS from Fortran using iso_c bindings. 
+ - `dgemm_mkl` uses MKL with the Intel extension `target variant dispatch`
 
 A snippet of the code, showing the interface is:
 
