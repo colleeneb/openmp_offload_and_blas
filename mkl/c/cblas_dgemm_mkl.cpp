@@ -16,7 +16,6 @@ int main( int argc, char* argv[] )
   int teams = 0;
   int threads = 0;
   int error = 0;
-  int size = SIZE;
 
   double alpha = 1.0;
   double beta = 1.0;
@@ -56,10 +55,10 @@ int main( int argc, char* argv[] )
 #pragma omp target enter data map(to:aa[0:SIZE*SIZE],bb[0:SIZE*SIZE],cc_gpu[0:SIZE*SIZE])
 
 #pragma omp target variant dispatch use_device_ptr(aa, bb, cc_gpu) 
-      dgemm( "N", "N", &size, &size, &size, &alpha, aa,
-	     &size, bb, &size, &beta, cc_gpu, &size);
+      cblas_dgemm( CblasColMajor, CblasNoTrans, CblasNoTrans,SIZE,SIZE,SIZE, alpha, aa,
+		   SIZE, bb, SIZE, beta, cc_gpu, SIZE);
 
-#pragma omp target exit data map(from:cc_gpu[0:SIZE*SIZE])
+ #pragma omp target exit data map(from:cc_gpu[0:SIZE*SIZE])
 
   // error checking
   for(int i=0;i<SIZE*SIZE;i++)

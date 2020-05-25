@@ -1,6 +1,6 @@
-EXES=dgemm_mkl
+EXES=dgemm_mkl cblas_dgemm_mkl
 
-CC=icc
+CC=icx
 FC=ifort
 CXXFLAGS=-qnextgen -mllvm -vpo-paropt-use-interop -fiopenmp -fopenmp-targets=spir64 -g -mkl
 CFLAGS=$(CXXFLAGS)
@@ -10,6 +10,8 @@ FFLAGS=$(CXXFLAGS)
 all: $(EXES)
 
 dgemm_mkl: dgemm_mkl.cpp
+	-$(CC) -o $@  $(CFLAGS) $^  
+cblas_dgemm_mkl: cblas_dgemm_mkl.cpp
 	-$(CC) -o $@  $(CFLAGS) $^  
 
 .PHONY: clean
