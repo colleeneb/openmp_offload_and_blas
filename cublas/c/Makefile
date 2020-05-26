@@ -1,4 +1,4 @@
-EXES=dgemm_cublas
+EXES=dgemm_cublas batched_dgemm_cublas
 
 CUDAC=nvcc
 CC=xlc_r
@@ -11,6 +11,8 @@ FFLAGS=$(CXXFLAGS)
 all: $(EXES)
 
 dgemm_cublas: dgemm_cublas.c
+	-$(CC) -o $@  $(CFLAGS) $^  
+hand_batched_dgemm_cublas: hand_batched_dgemm_cublas.c
 	-$(CC) -o $@  $(CFLAGS) $^  
 
 .PHONY: clean
